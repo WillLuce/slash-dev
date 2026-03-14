@@ -5,7 +5,7 @@
 CONFIG_FILE="${CLAUDE_PLUGIN_ROOT}/config.local.json"
 
 if [ ! -f "$CONFIG_FILE" ]; then
-  echo "Configuration not found. Run /dev-setup first."
+  echo "Configuration not found. Run /dev:configure first."
   exit 1
 fi
 

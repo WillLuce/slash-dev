@@ -18,8 +18,8 @@ Read the plugin structure to understand what you're working with:
 ${CLAUDE_PLUGIN_ROOT}/
 ├── .claude-plugin/plugin.json    # Manifest (name, version, description)
 ├── .releaserc                    # semantic-release config
-├── commands/                     # User-invoked /dev-* commands
-│   ├── dev-setup.md
+├── commands/                     # User-invoked /dev:* commands
+│   ├── dev-configure.md
 │   ├── dev-discovery.md
 │   ├── dev-architecture.md
 │   ├── dev-plan.md

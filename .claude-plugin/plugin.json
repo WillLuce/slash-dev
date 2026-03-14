@@ -1,5 +1,5 @@
 {
-  "name": "slash-dev",
+  "name": "dev",
   "description": "Phased development workflow for Claude Code. Structured SDLC phases (discovery, architecture, planning, implementation, meetings) with persistent project memory, collaborative personas, and built-in code review.",
   "version": "3.0.0",
   "author": {

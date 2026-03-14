@@ -25,7 +25,7 @@ Each phase produces persistent markdown docs that serve as project memory across
 
 3. Run setup:
    ```
-   /dev-setup
+   /dev:configure
    ```
    This configures where your project docs and code repos live. Configuration is stored locally and gitignored.
 
@@ -33,15 +33,15 @@ Each phase produces persistent markdown docs that serve as project memory across
 
 | Command | Purpose |
 |---------|---------|
-| `/dev-setup` | Configure workspace paths and detect MCP servers |
-| `/dev-discovery <name>` | Start or resume project discovery |
-| `/dev-architecture <name>` | Design the solution architecture |
-| `/dev-plan <name>` | Plan implementation and create tickets |
-| `/dev-implement <name>` | Execute the plan with built-in review |
-| `/dev-meeting <name>` | Capture meeting notes with project context |
-| `/dev-explain [command]` | Learn the workflow or get help on a specific command |
-| `/dev-update` | Pull latest plugin version |
-| `/dev-meta` | Work on the slash-dev plugin itself |
+| `/dev:configure` | Configure workspace paths and detect MCP servers |
+| `/dev:discovery <name>` | Start or resume project discovery |
+| `/dev:architecture <name>` | Design the solution architecture |
+| `/dev:plan <name>` | Plan implementation and create tickets |
+| `/dev:implement <name>` | Execute the plan with built-in review |
+| `/dev:meeting <name>` | Capture meeting notes with project context |
+| `/dev:explain [command]` | Learn the workflow or get help on a specific command |
+| `/dev:update` | Pull latest plugin version |
+| `/dev:meta` | Work on the slash-dev plugin itself |
 
 All commands support a project picker — omit the project name to choose from existing projects.
 
@@ -51,7 +51,7 @@ Each project creates this structure in your configured projects directory:
 
 ```
 <project-name>/
-├── project.json          # Metadata (name, status, tags)
+├── project.json          # Metadata (name, description, tags)
 ├── 00-discovery.md       # Problem definition and exploration
 ├── 01-architecture.md    # Solution design
 ├── 02-plan.md            # Implementation plan
@@ -78,7 +78,7 @@ slash-dev works best with these MCP servers (all optional):
 - **GitHub** — repository and PR management
 - **Atlassian** — Jira ticket creation and Confluence integration
 
-Run `/dev-setup` to see which servers are detected.
+Run `/dev:configure` to see which servers are detected.
 
 ## Contributing
 
@@ -87,7 +87,7 @@ This plugin uses conventional commits and semantic-release:
 - `fix:` — bug fixes (patch version bump)
 - `BREAKING CHANGE:` — breaking changes (major version bump)
 
-Use `/dev-meta` to work on the plugin with full context awareness.
+Use `/dev:meta` to work on the plugin with full context awareness.
 
 ## License
 

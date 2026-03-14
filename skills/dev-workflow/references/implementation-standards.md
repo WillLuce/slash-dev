@@ -1,6 +1,6 @@
 # Implementation Standards
 
-These are the default development standards for `/dev-implement`. They define how code gets written, committed, reviewed, and shipped.
+These are the default development standards for `/dev:implement`. They define how code gets written, committed, reviewed, and shipped.
 
 These standards are shipped as sensible defaults. Users can modify this file to match their team's conventions.
 

@@ -1,5 +1,5 @@
 ---
-description: Understand the /dev-* workflow and phased development approach
+description: Understand the /dev:* workflow and phased development approach
 argument-hint: [specific-command]
 ---
 
@@ -9,7 +9,7 @@ When this command is invoked:
 
 ## Purpose
 
-This command explains the `/dev-*` phased development workflow, helping you understand:
+This command explains the `/dev:*` phased development workflow, helping you understand:
 - The philosophy behind each mode
 - When to use each command
 - How the project structure supports collaborative development
@@ -23,13 +23,15 @@ If the user provided an argument (specific command name):
 - Explain its inputs/outputs and relationship to other modes
 
 If no argument provided:
-- Present the full workflow overview
-- Be ready to answer questions interactively
+- Present the full workflow overview FIRST — walk the user through the philosophy, the phases, the project structure, and the common workflows before asking questions
+- After the overview, transition to interactive Q&A
 - Help the user understand which mode they should use for their current task
+
+**Important**: Lead with substance. Don't just ask what the user wants to know — explain the workflow thoroughly first. The user came here to learn, so teach them. Then open the floor.
 
 ---
 
-## The /dev-* Workflow Philosophy
+## The /dev:* Workflow Philosophy
 
 ### Core Principles
 
@@ -52,11 +54,11 @@ All phase commands load all available project docs. Architecture mode can refere
 
 ## Available Commands
 
-### /dev-setup
-**Purpose**: Configure your /dev-* workflow preferences (run this first!)
+### /dev:configure
+**Purpose**: Configure your /dev:* workflow preferences (run this first!)
 
 **When to use**:
-- First time setting up the /dev-* workflow
+- First time setting up the /dev:* workflow
 - When you want to change where dev-projects are stored
 - When moving to a new machine
 
@@ -68,7 +70,7 @@ All phase commands load all available project docs. Architecture mode can refere
 
 ---
 
-### /dev-discovery <project-name>
+### /dev:discovery <project-name>
 **Purpose**: Collaboratively explore and define the problem space for a project.
 
 **When to use**:
@@ -82,7 +84,7 @@ All phase commands load all available project docs. Architecture mode can refere
 
 ---
 
-### /dev-architecture <project-name>
+### /dev:architecture <project-name>
 **Purpose**: Design the solution — what are we building, precisely?
 
 **When to use**:
@@ -96,7 +98,7 @@ All phase commands load all available project docs. Architecture mode can refere
 
 ---
 
-### /dev-plan <project-name>
+### /dev:plan <project-name>
 **Purpose**: Break the architecture into implementable work with specific changes per repo.
 
 **When to use**:
@@ -110,7 +112,7 @@ All phase commands load all available project docs. Architecture mode can refere
 
 ---
 
-### /dev-implement <project-name>
+### /dev:implement <project-name>
 **Purpose**: Execute the plan — build it, review it, ship it.
 
 **When to use**:
@@ -128,7 +130,7 @@ All phase commands load all available project docs. Architecture mode can refere
 
 ---
 
-### /dev-meeting <project-name>
+### /dev:meeting <project-name>
 **Purpose**: Capture meeting notes with full project context awareness.
 
 **When to use**:
@@ -141,7 +143,7 @@ All phase commands load all available project docs. Architecture mode can refere
 
 ---
 
-### /dev-meta
+### /dev:meta
 **Purpose**: Work on the slash-dev plugin itself.
 
 **When to use**:
@@ -152,7 +154,7 @@ All phase commands load all available project docs. Architecture mode can refere
 
 ---
 
-### /dev-update
+### /dev:update
 **Purpose**: Pull the latest version of the slash-dev plugin.
 
 **When to use**:
@@ -163,11 +165,11 @@ All phase commands load all available project docs. Architecture mode can refere
 
 ## Project Structure
 
-When you run `/dev-discovery <project-name>`, this structure is created:
+When you run `/dev:discovery <project-name>`, this structure is created:
 
 ```
 <projects-dir>/<project-name>/
-├── project.json              # Metadata (name, description, status, tags)
+├── project.json              # Metadata (name, description, tags)
 ├── 00-discovery.md           # Problem definition and exploration
 ├── 01-architecture.md        # Solution design
 ├── 02-plan.md                # Implementation plan with repo specs
@@ -183,26 +185,26 @@ When you run `/dev-discovery <project-name>`, this structure is created:
 ## Common Workflows
 
 ### First Time Setup
-1. `/dev-setup` — configure your workspace (only needed once)
+1. `/dev:configure` — configure your workspace (only needed once)
 
 ### New Feature
-1. `/dev-discovery feature-name` — explore relevant code, define the problem
-2. `/dev-architecture feature-name` — design the solution
-3. `/dev-plan feature-name` — plan implementation, create tickets
-4. `/dev-implement feature-name` — build it
+1. `/dev:discovery feature-name` — explore relevant code, define the problem
+2. `/dev:architecture feature-name` — design the solution
+3. `/dev:plan feature-name` — plan implementation, create tickets
+4. `/dev:implement feature-name` — build it
 
 ### Simple Bug Fix
-1. `/dev-discovery bug-name` — find where the bug is
-2. `/dev-implement bug-name` — fix it (skip architecture/planning for simple fixes)
+1. `/dev:discovery bug-name` — find where the bug is
+2. `/dev:implement bug-name` — fix it (skip architecture/planning for simple fixes)
 
 ### Design Discussion
-1. `/dev-discovery project-name` — initial exploration
-2. `/dev-meeting project-name` — capture design discussion
-3. `/dev-architecture project-name` — formalize decisions from meeting
+1. `/dev:discovery project-name` — initial exploration
+2. `/dev:meeting project-name` — capture design discussion
+3. `/dev:architecture project-name` — formalize decisions from meeting
 
 ### Investigation (No Implementation)
-1. `/dev-discovery investigation-name` — find relevant code
-2. `/dev-architecture investigation-name` — document how it works
+1. `/dev:discovery investigation-name` — find relevant code
+2. `/dev:architecture investigation-name` — document how it works
 3. (Stop here — no plan or implementation needed)
 
 ---
@@ -211,8 +213,8 @@ When you run `/dev-discovery <project-name>`, this structure is created:
 
 The slash-dev plugin is distributed via GitHub. Each developer:
 1. Installs the plugin in Claude Code
-2. Runs `/dev-setup` to configure their own paths
-3. Uses the same `/dev-*` commands, configured for their machine
+2. Runs `/dev:configure` to configure their own paths
+3. Uses the same `/dev:*` commands, configured for their machine
 
 Project docs can be committed to git so team members can review and resume each other's work.
 
@@ -243,4 +245,14 @@ You are now in EXPLAIN MODE. The user can ask questions like:
 
 ---
 
-Start by asking: "What would you like to know about the /dev-* workflow?"
+**IMPORTANT — Presentation Order:**
+
+When no specific command is requested, present the content in this order:
+1. Open with a brief welcome: what slash-dev is and what it's for
+2. Walk through the philosophy (phased, collaborative, persistent, resumable)
+3. Explain each command with its purpose and when to use it
+4. Show the project structure
+5. Walk through 2-3 common workflows as concrete examples
+6. THEN transition: "That's the overview. What questions do you have, or would you like to dive deeper into any of these?"
+
+Do NOT skip to Q&A. The user is here to learn the system.

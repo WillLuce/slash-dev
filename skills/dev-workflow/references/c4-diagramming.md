@@ -1,6 +1,6 @@
 # C4 Diagramming Reference
 
-C4 is the preferred approach for architecture diagrams. This reference defines conventions for use during `/dev-architecture`.
+C4 is the preferred approach for architecture diagrams. This reference defines conventions for use during `/dev:architecture`.
 
 ## Levels
 

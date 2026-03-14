@@ -12,10 +12,10 @@ When this command is invoked:
 Follow the shared workflow logic in `${CLAUDE_PLUGIN_ROOT}/skills/dev-workflow/SKILL.md`:
 1. Load configuration
 2. Resolve project (argument or picker)
-3. Validate project exists (if not: "Project '${projectName}' not found. Run /dev-discovery first." and STOP)
+3. Validate project exists (if not: "Project '${projectName}' not found. Run /dev:discovery first." and STOP)
 4. Set up paths
 5. Gather context (load ALL available phase docs)
-6. Update project status to `"implementing"`
+6. Log session to `${CLAUDE_PLUGIN_ROOT}/sessions.local.log`
 
 ## Status Messages
 
@@ -118,7 +118,7 @@ Read it at the start of implementation. Key points:
 If the project plan includes Jira tickets and you want to try delegating individual ticket execution:
 - The user may ask to hand off a ticket to Guild's `sdlc-workflow` plugin
 - This is an experimental integration — discuss with the user before attempting
-- `/dev-implement` remains the default execution mode
+- `/dev:implement` remains the default execution mode
 
 ---
 

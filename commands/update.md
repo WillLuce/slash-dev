@@ -10,7 +10,7 @@ When this command is invoked:
 
 1. Read `${CLAUDE_PLUGIN_ROOT}/config.local.json` to confirm setup exists
 2. If config does NOT exist:
-   - Output: "No configuration found. Run /dev-setup first."
+   - Output: "No configuration found. Run /dev:configure first."
    - STOP execution
 3. Store a copy of current config values in memory for comparison
 

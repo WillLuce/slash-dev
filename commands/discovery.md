@@ -15,7 +15,7 @@ Follow the shared workflow logic in `${CLAUDE_PLUGIN_ROOT}/skills/dev-workflow/S
 3. If new project: run Project Initialization
 4. Set up paths
 5. Gather context
-6. Update project status to `"discovery"`
+6. Log session to `${CLAUDE_PLUGIN_ROOT}/sessions.local.log`
 
 ## Discovery Document Initialization
 

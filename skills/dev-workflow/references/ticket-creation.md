@@ -1,6 +1,6 @@
 # Ticket Creation Reference
 
-This reference guides Jira ticket creation during `/dev-plan`. Conventions here are a starting point — they will evolve as the workflow is used.
+This reference guides Jira ticket creation during `/dev:plan`. Conventions here are a starting point — they will evolve as the workflow is used.
 
 ## When to Create Tickets
 

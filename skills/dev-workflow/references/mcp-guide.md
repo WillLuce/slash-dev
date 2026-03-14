@@ -1,6 +1,6 @@
 # MCP Server Usage Guide
 
-This reference describes commonly used MCP servers and how to use them effectively within the `/dev-*` workflow.
+This reference describes commonly used MCP servers and how to use them effectively within the `/dev:*` workflow.
 
 ## Context7 — Library Documentation
 
@@ -33,7 +33,7 @@ This reference describes commonly used MCP servers and how to use them effective
 - Creating/managing issues
 - Viewing branches, commits, and tags
 
-**Common operations in the /dev-* workflow**:
+**Common operations in the /dev:* workflow**:
 - **Discovery**: Search for repos, read remote code, explore organization repositories
 - **Architecture**: Read code from repos you don't have cloned locally
 - **Planning**: Check existing PRs/issues, verify branch state
@@ -51,7 +51,7 @@ This reference describes commonly used MCP servers and how to use them effective
 - Checking ticket status during implementation
 - Finding existing documentation or specifications
 
-**Common operations in the /dev-* workflow**:
+**Common operations in the /dev:* workflow**:
 - **Discovery**: Look up product specs, feature requirements, existing documentation
 - **Planning**: Create Jira tickets, set story points, link dependencies
 - **Implementation**: Update ticket status, add comments, link PRs
@@ -65,4 +65,4 @@ This reference describes commonly used MCP servers and how to use them effective
 2. **Use GitHub MCP for remote repos** — don't assume everything is cloned locally
 3. **Check Atlassian for product context** — Confluence often has requirements and specs that inform discovery
 4. **MCP servers are optional** — the workflow works without them, but they enhance discovery, planning, and implementation
-5. **Check what's available** — run `/dev-setup` to see which MCP servers are detected
+5. **Check what's available** — run `/dev:configure` to see which MCP servers are detected

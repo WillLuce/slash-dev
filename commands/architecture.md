@@ -12,10 +12,10 @@ When this command is invoked:
 Follow the shared workflow logic in `${CLAUDE_PLUGIN_ROOT}/skills/dev-workflow/SKILL.md`:
 1. Load configuration
 2. Resolve project (argument or picker)
-3. Validate project exists (if not: "Project '${projectName}' not found. Run /dev-discovery first." and STOP)
+3. Validate project exists (if not: "Project '${projectName}' not found. Run /dev:discovery first." and STOP)
 4. Set up paths
 5. Gather context
-6. Update project status to `"architecture"`
+6. Log session to `${CLAUDE_PLUGIN_ROOT}/sessions.local.log`
 
 ## Architecture Document Initialization
 
