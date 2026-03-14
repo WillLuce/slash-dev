@@ -115,10 +115,58 @@ Read it at the start of implementation. Key points:
 
 ## SDLC Workflow Delegation (Experimental)
 
-If the project plan includes Jira tickets and you want to try delegating individual ticket execution:
-- The user may ask to hand off a ticket to Guild's `sdlc-workflow` plugin
-- This is an experimental integration — discuss with the user before attempting
-- `/dev:implement` remains the default execution mode
+When starting implementation, if the project has a well-defined plan, offer the user a choice:
+
+```
+How would you like to execute this?
+
+  A) Built-in implementation (discuss/plan/execute — collaborative, you're in the loop at every step)
+  B) Hand off to sdlc-workflow (more autonomous — you approve at phase boundaries, it runs between them)
+```
+
+Use `AskUserQuestion` to present the choice. Default is A.
+
+### If the user chooses B (sdlc-workflow handoff):
+
+1. **Verify sdlc-workflow is available** — check if `/sdlc-workflow:implement` is a recognized skill. If not, inform the user it needs to be installed and fall back to option A.
+
+2. **Output a structured context block** that sdlc-workflow can pick up from conversation history:
+
+```markdown
+## Handoff to sdlc-workflow
+
+**Project:** ${projectName}
+**Ticket:** ${ticket ID from plan, if available}
+**Type:** ${feature/fix/refactor}
+
+**Requirements & Acceptance Criteria:**
+${extracted from plan — objective, success criteria}
+
+**Codebase:**
+${repo paths and key files from plan}
+
+**Architecture Context:**
+${key patterns, conventions, and design decisions from architecture doc}
+
+**Implementation Plan:**
+${the specific changes from 02-plan.md for this unit of work}
+
+**Standards:**
+${commit conventions, branch naming, PR workflow from config/preferences}
+```
+
+3. **Invoke sdlc-workflow** — Since our discovery/architecture/plan covers sdlc Phases 0-2, skip directly to Phase 3:
+
+   Tell Claude to invoke `/sdlc-workflow:implement` with the context above. The sdlc-workflow implement phase will pick up the plan from conversation history.
+
+   If `/sdlc-workflow:implement` cannot be invoked automatically, instruct the user:
+   "Context is ready. Invoke `/sdlc-workflow:implement` to start."
+
+4. **Note for A/B testing**: When running both approaches in parallel via worktrees, use the same plan as the starting point for both. Compare results on: code quality, test coverage, number of review cycles, time to PR.
+
+### If the user chooses A (built-in):
+
+Proceed with the standard three-phase pattern documented above.
 
 ---
 
