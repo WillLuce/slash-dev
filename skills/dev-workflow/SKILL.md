@@ -35,25 +35,19 @@ If the command was invoked WITH a project name argument:
    - STOP execution
 
 If the command was invoked WITHOUT a project name argument:
-1. Read the session history from `${CLAUDE_PLUGIN_ROOT}/sessions.local.log`
-2. Check if there is a recent session entry (the last line in the log)
-3. If a recent session exists, ask the user:
-   - "Last time you were in **[command]** mode on **[project]**. Continue with that project, or switch?"
-   - Use `AskUserQuestion` with options:
-     - "Continue with [project]"
-     - "Switch project"
-4. If the user wants to continue: set `projectName` and `projectPath` accordingly
-5. If the user wants to switch (or no session history):
-   - Read `projects_dir` from config
-   - Scan subdirectories for `project.json` files
-   - Present all projects via `AskUserQuestion`:
-     - Each existing project as an option: "[name] — [description]"
-     - Final option: "Create new project"
-   - If user selects an existing project: set `projectName` and `projectPath` accordingly
-   - If user selects "Create new project":
-     - Ask for project name
-     - Ask for a brief description
-     - Proceed to Project Initialization
+1. Read `projects_dir` from config
+2. Run this exact command to list projects:
+   ```bash
+   bash ${CLAUDE_PLUGIN_ROOT}/scripts/list-projects.sh
+   ```
+3. Present the results via `AskUserQuestion`:
+   - Each project as an option
+   - Final option: "Other / Create new project"
+4. If user selects an existing project: set `projectName` and `projectPath` accordingly
+5. If user selects "Other / Create new project":
+   - Ask for project name
+   - If a project with that name exists, use it
+   - Otherwise proceed to Project Initialization
 
 ## Project Initialization
 
@@ -66,10 +60,15 @@ Only runs for new projects (typically from `/dev:discovery`).
      "name": "${projectName}",
      "description": "${user-provided description}",
      "created": "${current date YYYY-MM-DD}",
+     "last_activity": "${current date YYYY-MM-DD}",
      "tags": []
    }
    ```
 3. Create the phase document appropriate to the command (template defined in each command)
+
+## Session Start
+
+After project resolution, update `last_activity` in `project.json` to today's date.
 
 ## Path Setup
 
@@ -84,25 +83,7 @@ After project resolution, define these standard paths:
 
 ## Context Gathering
 
-### Always Auto-Load
-Read these files if they exist:
-- `project.json` — project metadata
-- `${discoveryPath}` — problem definition, exploration findings, solution direction
-- `${architecturePath}` — component design, C4 diagrams, data flows
-- `${planPath}` — implementation steps, repo/file specs, tickets
-
-### Offer On Request
-Check if these exist and mention their availability:
-- `${meetingsPath}` — if directory has files, output: "Meeting notes available. Want me to load any?"
-
-### Never Auto-Load
-Do not load or mention unless the user explicitly asks:
-- `${changelogPath}` — back-propagation history (grows over time)
-- `${contextExcludedPath}` — scratch files, references
-
-## Context Status Output
-
-After loading context, output:
+Do not auto-load phase documents during bootstrap. After project resolution, check which paths exist and output a summary:
 
 ```
 Available context:
@@ -112,19 +93,7 @@ Available context:
   [check] Meeting notes           (if meetingsPath has files)
 ```
 
-Only show lines for docs that exist.
-
-## Session Logging
-
-After project resolution, append a line to `${CLAUDE_PLUGIN_ROOT}/sessions.local.log`:
-
-```
-${YYYY-MM-DD HH:MM} ${projectName} ${command}
-```
-
-Where `${command}` is the phase name: `discovery`, `architecture`, `plan`, `implement`, `meeting`, `meta`, etc.
-
-This file is gitignored (`*.local.*`) and stays on the user's machine. It powers the "continue or switch?" prompt and provides a history of how the user has been working across all projects.
+Only show lines for docs that exist. Load documents when the user or the command's workflow calls for them.
 
 ## Back-Propagation Rules
 
@@ -142,9 +111,4 @@ When any command updates a phase document that belongs to an earlier phase (e.g.
 
 ## Resumption Behavior
 
-When a command loads an existing phase document:
-1. Read the document
-2. Provide a brief summary of the current state
-3. Ask how the user wants to continue
-
-This applies to all phase commands — discovery, architecture, planning, implementation.
+Each invocation starts fresh. Do not attempt to resume or continue from a previous session. After loading context, proceed directly into the command's defined workflow.
