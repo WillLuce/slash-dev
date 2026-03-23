@@ -3,6 +3,13 @@
   "plugins": [
     "@semantic-release/commit-analyzer",
     "@semantic-release/release-notes-generator",
+    ["@semantic-release/exec", {
+      "prepareCmd": "node -e \"const f='.claude-plugin/plugin.json'; const p=JSON.parse(require('fs').readFileSync(f)); p.version='${nextRelease.version}'; require('fs').writeFileSync(f, JSON.stringify(p, null, 2)+'\\n')\""
+    }],
+    ["@semantic-release/git", {
+      "assets": [".claude-plugin/plugin.json"],
+      "message": "chore(release): ${nextRelease.version}"
+    }],
     "@semantic-release/github"
   ]
 }
