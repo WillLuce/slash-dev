@@ -13,6 +13,7 @@ This command explains the `/dev:*` phased development workflow, helping you unde
 - The philosophy behind each mode
 - When to use each command
 - How the project structure supports collaborative development
+- How planning produces Jira tickets for autonomous or collaborative execution
 - Best practices for working through complex projects
 
 ## Mode Selection
@@ -36,7 +37,7 @@ If no argument provided:
 ### Core Principles
 
 **Phased Over Monolithic**
-Complex engineering work benefits from distinct phases: understanding the problem (discovery), designing the solution (architecture), planning the implementation (planning), and executing (implementation). Trying to do all phases simultaneously leads to confusion and rework.
+Complex engineering work benefits from distinct phases: understanding the problem (discovery), designing the solution (architecture), planning the execution (planning), and building (implementation). Trying to do all phases simultaneously leads to confusion and rework.
 
 **Collaborative Over Autonomous**
 Claude is positioned as a thought partner, not an autopilot. Each mode emphasizes back-and-forth conversation, asking questions, and waiting for guidance rather than charging ahead with assumptions.
@@ -44,11 +45,11 @@ Claude is positioned as a thought partner, not an autopilot. Each mode emphasize
 **Persistent Over Ephemeral**
 Everything is saved to markdown files in a structured project directory. This creates a knowledge base that persists across sessions, can be reviewed by teammates, and serves as documentation of both the problem and solution.
 
-**Resumable Over Fresh Start**
-Each mode detects whether you're starting fresh or continuing previous work. When resuming, context is automatically loaded so you don't lose continuity.
+**Maps and Tickets**
+The workflow produces two kinds of artifacts: *maps* (markdown docs that capture understanding, design, and rationale) and *tickets* (Jira stories that define discrete work units). Maps stay in the project directory. Tickets live in Jira. The plan connects the two — it's the sequencing logic that explains why tickets are ordered the way they are.
 
-**Contextual Over Isolated**
-All phase commands load all available project docs. Architecture mode can reference discovery findings. Planning can reference both discovery and architecture. Implementation has access to everything.
+**Ticket-Ready Output**
+Planning mode produces Jira tickets structured for handoff to any developer — human or autonomous agent. Each ticket includes scope, acceptance criteria, constraints, context pointers, and dependencies. A developer picking up a ticket should be able to start work without asking questions.
 
 ---
 
@@ -59,12 +60,14 @@ All phase commands load all available project docs. Architecture mode can refere
 
 **When to use**:
 - First time setting up the /dev:* workflow
-- When you want to change where dev-projects are stored
+- When you want to change where projects are stored
 - When moving to a new machine
 
 **What it does**:
-- Asks where you want to store dev-projects documentation
+- Asks where you want to store project documentation
 - Asks where your code repositories are located
+- Learns about you (role, team) to tailor collaboration
+- Optionally configures commit conventions, ticket system, PR workflow
 - Detects installed MCP servers
 - Stores configuration in `${CLAUDE_PLUGIN_ROOT}/config.local.json`
 
@@ -85,48 +88,54 @@ All phase commands load all available project docs. Architecture mode can refere
 ---
 
 ### /dev:architecture <project-name>
-**Purpose**: Design the solution — what are we building, precisely?
+**Purpose**: Design the solution — components, data flow, interfaces, technical decisions.
 
 **When to use**:
 - After discovery, when the problem is well-defined
 - When you need to design component structure, data flows, and integration points
 - To create C4 diagrams for the solution
 
-**What it produces**: `01-architecture.md` — solution design, component architecture, data flow, integration points, C4 diagrams.
+**What it produces**: `01-architecture.md` — solution design, component architecture, data flow, integration points, design decisions and rationale.
 
-**Key behavior**: Collaborative design. Claude helps formalize the solution direction from discovery into precise architectural decisions. Supports C4 diagramming with a structured component-by-component workflow.
+**Key behavior**: Collaborative design. Formalizes the solution direction from discovery into precise architectural decisions. Supports C4 diagramming.
 
 ---
 
 ### /dev:plan <project-name>
-**Purpose**: Break the architecture into implementable work with specific changes per repo.
+**Purpose**: Sequence the work and produce Jira tickets.
 
 **When to use**:
 - After architecture is designed
-- When you need to identify exactly what code changes are needed
-- To create Jira tickets for the work
+- When you need to break work into ordered, executable units
+- To create tickets that can be picked up by any developer
 
-**What it produces**: `02-plan.md` — implementation steps, specific changes per repo/file, testing strategy, risk assessment, Jira tickets.
+**What it produces**:
+- `02-plan.md` — the solution map: sequencing logic, decision log, constraints and risks, ticket index
+- **Jira tickets** (via Atlassian MCP) — the actual work units, each structured with scope, acceptance criteria, constraints, context pointers, and dependencies
 
-**Key behavior**: Collaborative planning. Validates that referenced repos exist. Creates Jira tickets when the plan is solid. Each plan item specifies which codebase changes happen in.
+**Key behavior**: The plan is a map, not a manifest. Architecture describes the components. The plan describes the order you build them and why. File-level implementation detail lives in the Jira tickets, not the plan.
+
+**The plan and tickets are separate concerns.** You can read the plan to understand the approach without loading every ticket. Ticket detail lives in Jira and is queried on demand.
 
 ---
 
 ### /dev:implement <project-name>
-**Purpose**: Execute the plan — build it, review it, ship it.
+**Purpose**: Execute the work — pick up a ticket, build it, review it, ship it.
 
 **When to use**:
-- After planning is complete
+- After planning is complete and tickets exist
 - When ready to write/modify code
 
 **What it does**:
-- Loads all project context
-- Follows the three-phase pattern: Discuss (WAIT) -> Plan (WAIT) -> Execute incrementally
+- Selects a Jira ticket to work on (user specifies or picks from the plan's ticket list)
+- Fetches ticket details from Jira (scope, acceptance criteria, constraints)
+- Loads the solution map for architectural context
+- Follows the three-phase pattern: Discuss (WAIT) -> Plan steps (WAIT) -> Execute incrementally
 - Commits complete thoughts (code + tests together)
 - Runs code review before pushing
-- Creates PRs
+- Updates ticket status in Jira
 
-**Key behavior**: More autonomous than other phases, but still follows discuss/plan/execute. Review is built into the workflow, not optional.
+**Key behavior**: Works from the ticket, not the plan. The ticket defines *what* to build. The solution map provides *why* context. More autonomous than other phases, but still follows discuss/plan/execute.
 
 ---
 
@@ -150,8 +159,6 @@ All phase commands load all available project docs. Architecture mode can refere
 - When contributing to or modifying the slash-dev plugin
 - For dogfooding — using the tool to improve itself
 
-**Key behavior**: Understands the plugin's own structure, conventions, and component patterns.
-
 ---
 
 ### /dev:update
@@ -169,16 +176,18 @@ When you run `/dev:discovery <project-name>`, this structure is created:
 
 ```
 <projects-dir>/<project-name>/
-├── project.json              # Metadata (name, description, tags)
+├── project.json              # Metadata (name, description, last_activity)
 ├── 00-discovery.md           # Problem definition and exploration
 ├── 01-architecture.md        # Solution design
-├── 02-plan.md                # Implementation plan with repo specs
+├── 02-plan.md                # Solution map (sequencing, decisions, ticket index)
 ├── CHANGELOG.md              # Back-propagation log (not auto-loaded)
 ├── meetings/                 # Meeting notes
 │   ├── 2026-01-13.md
 │   └── ...
 └── context-excluded/         # Scratch files (never auto-loaded)
 ```
+
+Tickets live in Jira, not in the project directory. The plan's Tickets table is an index linking to Jira.
 
 ---
 
@@ -187,11 +196,11 @@ When you run `/dev:discovery <project-name>`, this structure is created:
 ### First Time Setup
 1. `/dev:configure` — configure your workspace (only needed once)
 
-### New Feature
+### New Feature (Full Workflow)
 1. `/dev:discovery feature-name` — explore relevant code, define the problem
 2. `/dev:architecture feature-name` — design the solution
-3. `/dev:plan feature-name` — plan implementation, create tickets
-4. `/dev:implement feature-name` — build it
+3. `/dev:plan feature-name` — sequence the work, create Jira tickets
+4. `/dev:implement feature-name` — pick up tickets and build
 
 ### Simple Bug Fix
 1. `/dev:discovery bug-name` — find where the bug is
@@ -213,10 +222,10 @@ When you run `/dev:discovery <project-name>`, this structure is created:
 
 The slash-dev plugin is distributed via GitHub. Each developer:
 1. Installs the plugin in Claude Code
-2. Runs `/dev:configure` to configure their own paths
+2. Runs `/dev:configure` to configure their own paths and preferences
 3. Uses the same `/dev:*` commands, configured for their machine
 
-Project docs can be committed to git so team members can review and resume each other's work.
+Project docs can be committed to git so team members can review and resume each other's work. Team-specific ticket conventions (Jira project, title patterns, hierarchy) live in each developer's `config.local.json` — not checked in.
 
 ---
 
@@ -225,7 +234,8 @@ Project docs can be committed to git so team members can review and resume each 
 You are now in EXPLAIN MODE. The user can ask questions like:
 
 - "Which mode should I use for X?"
-- "What's the difference between discovery and architecture?"
+- "What's the difference between the plan and the architecture?"
+- "What goes in a ticket vs the plan?"
 - "Can I skip planning and go straight to implementation?"
 - "How do I resume work from last week?"
 - "How do I share this with my team?"
@@ -239,7 +249,7 @@ You are now in EXPLAIN MODE. The user can ask questions like:
 
 **Key messages to emphasize**:
 - **Collaborative, not autonomous**: Each mode expects interaction, not fire-and-forget
-- **Persistent context**: Everything is saved, nothing is lost
+- **Maps and tickets**: Docs capture understanding and rationale. Tickets capture work units.
 - **Phased thinking**: Understanding before designing, designing before planning, planning before implementing
 - **Flexible**: You can skip phases for simple tasks or revisit earlier phases
 
@@ -249,7 +259,7 @@ You are now in EXPLAIN MODE. The user can ask questions like:
 
 When no specific command is requested, present the content in this order:
 1. Open with a brief welcome: what slash-dev is and what it's for
-2. Walk through the philosophy (phased, collaborative, persistent, resumable)
+2. Walk through the philosophy (phased, collaborative, persistent, maps and tickets)
 3. Explain each command with its purpose and when to use it
 4. Show the project structure
 5. Walk through 2-3 common workflows as concrete examples

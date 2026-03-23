@@ -52,9 +52,9 @@ This reference describes commonly used MCP servers and how to use them effective
 - Finding existing documentation or specifications
 
 **Common operations in the /dev:* workflow**:
-- **Discovery**: Look up product specs, feature requirements, existing documentation
-- **Planning**: Create Jira tickets, set story points, link dependencies
-- **Implementation**: Update ticket status, add comments, link PRs
+- **Discovery**: Look up product specs, feature requirements, existing documentation in Confluence
+- **Planning**: Create Jira epics and stories, link dependencies between tickets. Tickets are the primary deliverable of planning — see `ticket-creation.md` for the OMOA-ready structure. Check `config.local.json` for team-specific Jira conventions (project key, issue types, title patterns).
+- **Implementation**: Fetch ticket details for the current work unit, update ticket status, add comments, link PRs
 - **Meeting**: Reference tickets discussed, update action items
 
 ---

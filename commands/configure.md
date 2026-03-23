@@ -144,41 +144,9 @@ Store in config as `preferences.implementation`.
 
 ## Write Configuration
 
-Create `${CLAUDE_PLUGIN_ROOT}/config.local.json`:
+Create `${CLAUDE_PLUGIN_ROOT}/config.local.json`.
 
-```json
-{
-  "version": "3.0",
-  "projects_dir": "${absolute path}",
-  "code_dirs": ["${paths}"],
-  "user": {
-    "role": "${if provided}",
-    "team": "${if provided}"
-  },
-  "preferences": {
-    "commits": {
-      "format": "conventional",
-      "branch_pattern": "[TICKET-ID]-short-description",
-      "rules": []
-    },
-    "tickets": {
-      "system": "jira",
-      "default_project": "${if provided}"
-    },
-    "pr": {
-      "merge_strategy": "squash",
-      "draft_early": true,
-      "title_format": "conventional"
-    },
-    "implementation": {
-      "testing": "test-adjacent",
-      "review_priorities": []
-    }
-  },
-  "created_at": "${ISO 8601}",
-  "updated_at": "${ISO 8601}"
-}
-```
+See `${CLAUDE_PLUGIN_ROOT}/docs/config-reference.md` for the full schema and field descriptions.
 
 Only include sections the user actually configured. Don't write empty placeholder objects for skipped categories.
 
